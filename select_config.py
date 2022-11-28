@@ -11,6 +11,7 @@ class SelectConfig:
         self.name = config.get_name().split()[-1]
         self.printer = config.get_printer()
         self.gcode = self.printer.lookup_object('gcode')
+        self.current_config = self.printer.start_args['config_file']
         self.config_dir = os.path.dirname(
             self.printer.start_args['config_file'])
         self.gcode.register_command(
@@ -56,7 +57,7 @@ class SelectConfig:
         out_dir = tempfile.mkdtemp(prefix='klipper_config_profiles')
         os.chmod(out_dir, 0o777)  # TODO needed?
         command = [os.path.expanduser('~/klippy-env/bin/python'), self.script_path,
-                   '-o', out_dir, '--templates'] + globbed_template_paths + ['--set'] + param_str.split(' ')
+                   '-o', out_dir, '--current-config', self.current_config, '--templates'] + globbed_template_paths + ['--set'] + param_str.split(' ')
         if self.use_python:
             command.append("--python")
         config_changed = True  # TODO compute config hash and only do thing if needed
