@@ -75,7 +75,8 @@ class SelectConfig:
         if proc.returncode == 0:
             self.move_old_config()
             for out_file in os.listdir(out_dir):
-                shutil.copy(os.path.join(out_dir, out_file), self.config_dir)
+                subprocess.call(
+                    ['mv', os.path.join(out_dir, out_file), self.config_dir])
             self.gcode.run_script_from_command('RESTART')
 
 
