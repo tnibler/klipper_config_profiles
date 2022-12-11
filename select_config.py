@@ -11,6 +11,7 @@ class SelectConfig:
         self.name = config.get_name().split()[-1]
         self.printer = config.get_printer()
         self.gcode = self.printer.lookup_object('gcode')
+        self.print_stats = self.printer.lookup_object('print_stats')
         self.current_config = self.printer.start_args['config_file']
         self.config_dir = os.path.dirname(
             self.printer.start_args['config_file'])
@@ -49,6 +50,11 @@ class SelectConfig:
             self.gcode.respon_info(f'Done.')
 
     def cmd_SELECT_CONFIG(self, params):
+        if self.print_stats:
+            if self.print_stats.state in ['printing', 'paused']:
+                self.gcode.respond_info(
+                    'SELECT_CONFIG: print is running, doing nothing!')
+                return
         param_str = params.get_raw_command_parameters()
         globbed_template_paths = []
         for t in self.template_files:
