@@ -186,8 +186,9 @@ def main():
             exec_globals = {}
             exec(open(user_variables_file).read(), exec_globals)
             try:
-                bound_user_variables = exec_globals['user_variables'](
+                script_params = exec_globals['user_variables'](
                     user_params)
+                bound_user_variables.update(script_params)
             except NameError:
                 eprint(
                     f'Error: No user_variables function defined in {user_variables_file}.')
